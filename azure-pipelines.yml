@@ -7,10 +7,23 @@ trigger:
 - master
 
 pool:
-  name: Default
+  vmImage: ubuntu-latest
 
 steps:
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
-    goals: 'package'
+    goals: 'clean package'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'target'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- script: |
+    echo "Deployment Successful"
+    mkdir deployed
+    cp -r target/* deployed/
+  displayName: 'Simulated Deployment'
